@@ -16,7 +16,6 @@ class EpsilonGreedy():
         return
 
     def select(self):
-        #print(np.random.random())
         if np.random.random() < self.epsilon:
             return np.argmax(self.history_p)
         else:
@@ -39,40 +38,40 @@ class EpsilonGreedy():
                 self.history_p[idx] = sum(self.history[idx]) / len(self.history[idx])
 
         self.result.append(ans)
-
-        #print(self.history_p)
         return
 
-    def cal_result(self):
-        
+    def cal_result(self):       
         x = []
-
         for n in range(self.counts):
             x.append(sum(self.result[:n]) / (n + 1) )
+        return x
+    
+    def plt_result(self, array):
 
         plt.figure()
         plt.title('Aveage Reward Comparision')
         plt.xlabel('Episode')
-        plt.ylabel('Reward')
+        plt.ylabel('Total Probability')
         plt.ylim(0,1)
-        plt.plot(x, color='green', label='Thompson')
+        plt.plot(array, color='green', label='Thompson')
         plt.grid(axis='x', color='0.80')
-        plt.legend(title='Parameter where:')
         plt.show()
 
 if __name__ == '__main__':
-
-    np.random.seed(20) # Numerical value that generates a new set or repeats pseudo-random numbers. The value in the numpy random seed saves the state of randomness.
-
+    np.random.seed(20)
     N = 1000
-    p_bandits = [0.5, 0.1, 0.8, 0.9] # Color: Blue, Orange, Green, Red
+    epsilon = 0.95
+    p_bandits = [0.5, 0.1, 0.8, 0.9]
 
-    Number_of_Bandits = len(p_bandits)
-
-    epsilon = EpsilonGreedy(0.95, N, p_bandits)
+    Number_of_Bandits = len(p_bandits)  #Number of Bandits
+    epsilon_Function = EpsilonGreedy(epsilon, N, p_bandits)     #ini EpsilonGreedy
 
     for t in range(N):
-        chosen_p = epsilon.select()
-        epsilon.update(chosen_p)    #update history
-    epsilon.cal_result()
+        choosen_p = epsilon_Function.select()
+        epsilon_Function.update(choosen_p)
+
+    output = epsilon_Function.cal_result()
+    
+    epsilon_Function.plt_result(output)
+    print("Last Probability: " + str(max(output)))
     
