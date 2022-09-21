@@ -13,6 +13,9 @@ class EpsilonGreedy():
         self.history_p = [0.0 for col in range(len(values))] #ini history_p = [0, 0, 0...]
         self.history = [[] for col in range(len(values))]  #ini history = [[0], [0], [0]...]
         self.result = []
+        self.numbers_of_selections = [0] * len(values)
+        self.sums_of_reward = [0] * len(values)
+        self.historyAvgProbility = []
         return
 
     def select(self):
@@ -38,13 +41,32 @@ class EpsilonGreedy():
                 self.history_p[idx] = sum(self.history[idx]) / len(self.history[idx])
 
         self.result.append(ans)
+
+        self.sums_of_reward[choosen_p] += ans
+        self.numbers_of_selections[choosen_p] += 1
+
+        self.historyAvgProbility.append(sum(self.DivideTwoArray(self.sums_of_reward, self.numbers_of_selections)))
         return
 
     def cal_result(self):       
         x = []
         for n in range(self.counts):
             x.append(sum(self.result[:n]) / (n + 1) )
-        return x
+
+        print("Numbers of Selections: ", str(self.numbers_of_selections))
+        print("Sums of Reward: ", str(self.sums_of_reward))
+        
+        return self.historyAvgProbility
+    
+    def DivideTwoArray(self, arrayA, arrayB):
+        
+        Ans = [0.0 for col in range(len(arrayA))]
+        for i in range(len(arrayA)):
+            if arrayB[i] == 0:
+                Ans[i] = 0
+            else:
+                Ans[i] = arrayA[i] / arrayB[i]
+        return Ans
     
     def plt_result(self, array):
 
@@ -52,7 +74,7 @@ class EpsilonGreedy():
         plt.title('Aveage Reward Comparision')
         plt.xlabel('Episode')
         plt.ylabel('Total Probability')
-        plt.ylim(0,1)
+        #plt.ylim(0,1)
         plt.plot(array, color='green', label='Thompson')
         plt.grid(axis='x', color='0.80')
         plt.show()

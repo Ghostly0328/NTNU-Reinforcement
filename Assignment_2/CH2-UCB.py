@@ -1,5 +1,6 @@
 #Upper Confidence Bounds(UCB) algorithm
 
+from array import array
 from random import random
 import numpy as np
 import matplotlib.pyplot as plt
@@ -16,9 +17,12 @@ class UpperConfidenceBounds():
         self.numbers_of_selections = [0] * self.d
         self.sums_of_reward = [0] * self.d
         self.total_reward = 0
-        self.historyProbability = []
 
     def start(self):
+
+        historyProbability = []
+        historyAvgProbility = []
+
         for n in range(self.N):
             bandits = 0 #choose number of bandits
             max_upper_bound = 0
@@ -38,16 +42,18 @@ class UpperConfidenceBounds():
             self.sums_of_reward[bandits] += reward
             self.total_reward += reward
 
-            self.historyProbability.append(self.total_reward / (n + 1))
+            historyProbability.append(self.total_reward / (n + 1))
+            historyAvgProbility.append(sum(self.DivideTwoArray(self.sums_of_reward, self.numbers_of_selections)))
 
         output = pd.Series(self.bandits_selected).head(1500).value_counts(normalize=True)
 
         print(output)
         print("Number of Selections: ", str(self.numbers_of_selections))
         print("Number of reward: ", str(self.sums_of_reward))
-        print("Last One of Probaility: ", str(self.historyProbability[-1]))
+        print("Last One of Probaility: ", str(historyProbability[-1]))
+        print(historyAvgProbility)
 
-        self.Plt(self.historyProbability)
+        self.Plt(historyAvgProbility)
 
     def BanditsWinOrLose(self, idx):
         return 1 if np.random.random() < self.p_bandits[idx] else 0
@@ -58,10 +64,20 @@ class UpperConfidenceBounds():
         plt.title('UCB')
         plt.xlabel('Episode')
         plt.ylabel('Probability: 1~n')
-        plt.ylim(0,1)
+        #plt.ylim(0,1)
         plt.plot(ShowArray, color='green', label='Thompson')
         plt.grid(axis='x', color='0.80')
         plt.show()
+
+    def DivideTwoArray(self, arrayA, arrayB):
+        
+        Ans = [0.0 for col in range(len(arrayA))]
+        for i in range(len(arrayA)):
+            if arrayB[i] == 0:
+                Ans[i] = 0
+            else:
+                Ans[i] = arrayA[i] / arrayB[i]
+        return Ans
 
 if __name__ == '__main__':
 

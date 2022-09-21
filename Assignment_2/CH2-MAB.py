@@ -38,7 +38,7 @@ def plot_rewards(rewards):
     plt.title('Aveage Reward Comparision')
     plt.xlabel('Episode')
     plt.ylabel('Reward')
-    plt.ylim(0,1)
+    #plt.ylim(0,1)
     plt.plot(rewards, color='green', label='Thompson')
     plt.grid(axis='x', color='0.80')
     plt.legend(title='Parameter where:')
@@ -86,9 +86,8 @@ for step in range(1, N):
         averaged_total_reward += avged_arm_reward
     average_reward.append(averaged_total_reward)
 
-    totoal_test_p = 0
     total_p.append(sum(bandit_win_count) / sum(bandit_runing_count))
 
 plt.tight_layout() # Adjust the padding between and around subplots.
 plt.show()
-plot_rewards(total_p)
+plot_rewards(average_reward)
