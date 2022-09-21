@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns # Data visualization library based on matplotlib
 import scipy.stats as stats
+import time
 
 class EpsilonGreedy():
     def __init__(self, epsilon, counts, values):
@@ -56,6 +57,7 @@ class EpsilonGreedy():
         print("Numbers of Selections: ", str(self.numbers_of_selections))
         print("Sums of Reward: ", str(self.sums_of_reward))
         
+        #self.historyAvgProbility or x
         return self.historyAvgProbility
     
     def DivideTwoArray(self, arrayA, arrayB):
@@ -71,18 +73,21 @@ class EpsilonGreedy():
     def plt_result(self, array):
 
         plt.figure()
-        plt.title('Aveage Reward Comparision')
+        plt.title('Epsilon Greedy ε=0.9')
         plt.xlabel('Episode')
-        plt.ylabel('Total Probability')
+        plt.ylabel('Reward')
         #plt.ylim(0,1)
         plt.plot(array, color='green', label='Thompson')
         plt.grid(axis='x', color='0.80')
         plt.show()
 
 if __name__ == '__main__':
+
+    t0 = time.time()
+
     np.random.seed(20)
     N = 1000
-    epsilon = 0.95
+    epsilon = 0.9
     p_bandits = [0.5, 0.1, 0.8, 0.9]
 
     Number_of_Bandits = len(p_bandits)  #Number of Bandits
@@ -94,6 +99,8 @@ if __name__ == '__main__':
 
     output = epsilon_Function.cal_result()
     
+    t1 = time.time()
+    print("Cost Time: ", str(t1 - t0))
     epsilon_Function.plt_result(output)
-    print("Last Probability: " + str(max(output)))
+    print("Last Probability: " + str(output[-1]))
     

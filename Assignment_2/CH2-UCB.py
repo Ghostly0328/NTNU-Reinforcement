@@ -6,9 +6,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 import pandas as pd
-
+import time 
 
 class UpperConfidenceBounds():
+
     def __init__(self, counts, values):     #setting
         self.N = counts
         self.p_bandits = values
@@ -19,7 +20,6 @@ class UpperConfidenceBounds():
         self.total_reward = 0
 
     def start(self):
-
         historyProbability = []
         historyAvgProbility = []
 
@@ -36,6 +36,7 @@ class UpperConfidenceBounds():
                 if upper_bound > max_upper_bound:
                     max_upper_bound = upper_bound
                     bandits = i
+                    
             self.bandits_selected.append(bandits)
             self.numbers_of_selections[bandits] += 1
             reward = self.BanditsWinOrLose(bandits)
@@ -49,9 +50,8 @@ class UpperConfidenceBounds():
 
         print(output)
         print("Number of Selections: ", str(self.numbers_of_selections))
-        print("Number of reward: ", str(self.sums_of_reward))
-        print("Last One of Probaility: ", str(historyProbability[-1]))
-        print(historyAvgProbility)
+        print("Sums of Reward: ", str(self.sums_of_reward))
+        print("Last One of Probaility: ", str(historyAvgProbility[-1]))
 
         self.Plt(historyAvgProbility)
 
@@ -61,13 +61,12 @@ class UpperConfidenceBounds():
     def Plt(self, ShowArray):
 
         plt.figure()
-        plt.title('UCB')
+        plt.title('Upper Confidence Bounds')
         plt.xlabel('Episode')
-        plt.ylabel('Probability: 1~n')
+        plt.ylabel('Reward')
         #plt.ylim(0,1)
         plt.plot(ShowArray, color='green', label='Thompson')
         plt.grid(axis='x', color='0.80')
-        plt.show()
 
     def DivideTwoArray(self, arrayA, arrayB):
         
@@ -80,6 +79,7 @@ class UpperConfidenceBounds():
         return Ans
 
 if __name__ == '__main__':
+    t0 = time.time()
 
     np.random.seed(20)  #control stocastic random
     N = 1000
@@ -87,3 +87,6 @@ if __name__ == '__main__':
     
     UCB = UpperConfidenceBounds(N, p_bandits)
     UCB.start()
+    t1 = time.time()
+    print("Cost Time: " + str(t1 - t0))
+    plt.show()

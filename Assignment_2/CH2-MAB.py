@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns # Data visualization library based on matplotlib
 import scipy.stats as stats
+import time
 
 # # set up matplotlib
 # is_ipython = 'inline' in plt.get_backend()
@@ -44,6 +45,7 @@ def plot_rewards(rewards):
     plt.legend(title='Parameter where:')
     plt.show()
   
+t0 = time.time()
 
 N = 1000 # number of steps for Thompson Sampling
 bandit_runing_count = [1] * Number_of_Bandits   # Array for Number of bandits try times, e.g. [0. 0, 0]
@@ -55,6 +57,7 @@ ax = ax.flat # Iterator to plot
 
 average_reward = []
 total_p = []
+
 for step in range(1, N):
     # Beta distribution and alfa beta calculation
     bandit_distribution = []
@@ -88,6 +91,10 @@ for step in range(1, N):
 
     total_p.append(sum(bandit_win_count) / sum(bandit_runing_count))
 
+t1 = time.time()
+print("Cost Time: ", str(t1 - t0))
+
 plt.tight_layout() # Adjust the padding between and around subplots.
 plt.show()
 plot_rewards(average_reward)
+print("Last One of Probaility: ", average_reward[-1])
