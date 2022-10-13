@@ -7,19 +7,20 @@ from operator import index
 from matplotlib.pyplot import grid
 import numpy as np
 import random
+#隨機種子
 np.random.seed(9527)
 random.seed(9527)
 
 class Environment():
     def __init__(self):
-        self.rows = 4
-        self.cols = 6 
+        self.rows = 4   #列
+        self.cols = 6   #行
         self.grid_world = [[  "T",  "s1",  "s2",  "s3",  "s4",  "s5"],
                            [ "s6",  "s7",  "s8",  "s9",   "W", "s10"],
                            ["s11",   "W", "s12",   "W", "s13", "s14"],
                            ["s15", "s16", "s17", "s18", "s19", "s20"]] #T: Target, W: Wall
-        self.action_to_number = {"up": 0, "right":1, "down":2, "left":3}
-        self.action_dict = {"up": [-1,0], "right": [0, 1], "down": [1,0], "left":[0,-1]}
+        self.action_to_number = {"up": 0, "right":1, "down":2, "left":3}    #行為
+        self.action_dict = {"up": [-1,0], "right": [0, 1], "down": [1,0], "left":[0,-1]} #行為座標轉換
         self.direction_dict = {0: "up", 1:"right", 2:"down", 3:"left"}
         self.invalid_start = ["T", "W"]
 
