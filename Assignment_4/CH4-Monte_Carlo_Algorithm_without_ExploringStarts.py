@@ -3,6 +3,7 @@
 # Q-value: for simplicity zero
 # Initial Q values are all zero
 
+from email.policy import Policy
 from operator import index
 from matplotlib.pyplot import grid
 import numpy as np
@@ -38,10 +39,10 @@ class Environment():
 class Monte_Carlo():
     def __init__(self):
         self.env = Environment()
-        self.Max_iteration = 10000
+        self.Max_iteration = 20000
         self.gamma = 0.9
-        self.Horizon = 10 #Max episode_length
-        self.epsilon = 0.5
+        self.Horizon = 3 #Max episode_length
+        self.epsilon = 0.2
 
         self.Q_values = {}
         for row in range(self.env.rows):
@@ -86,11 +87,14 @@ class Monte_Carlo():
             Q_value.append(self.Q_values[(tuple(state_coordinate), valid_action)])
         max_value = max(Q_value)
 
-        for valid_action in valid_actions:
-            if max_value == self.Q_values[(tuple(state_coordinate), valid_action)]:
-                indexes.append(self.env.action_to_number[valid_action])
-        # indexes = [index for index,x in enumerate(Q_value) if x == max_value]
-        return self.env.direction_dict[random.choice(indexes)]
+        PolicyProbility = np.ones(len(valid_actions)) * self.epsilon / len(valid_actions)
+        PolicyProbility[np.argmax(Q_value)] += 1 - self.epsilon
+
+        # print("--------")
+        # print(valid_actions, PolicyProbility)
+        # print(valid_actions[np.random.choice(np.arange(len(valid_actions)), p = PolicyProbility)])
+
+        return valid_actions[np.random.choice(np.arange(len(valid_actions)), p = PolicyProbility)]
 
     def print_Qvalue(self, state_coordinate): #For debugging
         Q_value = []
@@ -98,11 +102,16 @@ class Monte_Carlo():
             Q_value.append(self.Q_values[(tuple(state_coordinate), action)])
         return Q_value
 
-    def iter(self): #Main loop
+    def iter(self): #Main loop 主要程式碼
         for iterration in range(self.Max_iteration):
+            # 初始參數
             episode = []
+            # 隨機決定位置
             self.current_state_coordinates = self.generate_initial_state()
+            # 隨機決定動作
             action = self.generate_random_action()
+
+            # Get the episode action
             for h in range(self.Horizon): #Generate episode
                 next_state_coordinates = self.env.transfer_state(self.current_state_coordinates, action)
                 reward = -1
@@ -114,7 +123,7 @@ class Monte_Carlo():
                 self.current_state_coordinates = next_state_coordinates
                 action = self.policy(self.current_state_coordinates)
             G = 0
-            
+             
             for h in range(len(episode)-1, -1, -1): #Iterate through H-1, H-2,...,0
                 coordinate, action, reward = episode[h]
                 G = self.gamma*G + reward
@@ -125,16 +134,6 @@ class Monte_Carlo():
                 visited_count += 1
                 self.returns_dict[(tuple(episode[h][0] ), episode[h][1])] = [mean, visited_count]
                 self.Q_values[(tuple(episode[h][0]), episode[h][1])] = self.returns_dict[(tuple(episode[h][0]), episode[h][1])][0]
-                
-                max_value = max(self.Q_values[(tuple(episode[h][0]), episode[h][1])])
-                for n_Q_value in range(len(self.Q_values[(tuple(episode[h][0]), episode[h][1])])):
-                    #Pretect division by zero 
-                    self.Q_values[(tuple(episode[h][0]), episode[h][1])] = 1e-5 if self.Q_values[(tuple(episode[h][0]), episode[h][1])] == 0 else self.Q_values[(tuple(episode[h][0]), episode[h][1])]
-
-                    if self.Q_values[(tuple(episode[h][0]), episode[h][1])] == max_value:
-                        self.Q_values[(tuple(episode[h][0]), episode[h][1])] = 1 - self.epsilon + self.epsilon/abs(self.Q_values[(tuple(episode[h][0]), episode[h][1])])
-                    else:
-                        self.Q_values[(tuple(episode[h][0]), episode[h][1])] = self.epsilon/abs(self.Q_values[(tuple(episode[h][0]), episode[h][1])])  
 
     def render(self): #Show results
         output = self.env.grid_world
@@ -198,22 +197,21 @@ if __name__ == "__main__":
     monte.iter()
     print("\nOptimal policy, T = Target, W = Wall")
     monte.render()
-    print("\n\n\n")
 
-    print("************************Slides example***********************")
-    monte = Monte_Carlo()
-    initial_policy = [((0,1),"left"), ((0,2), "left"), ((0,3), "left"), ((0,4), "right"), ((0,5), "left"),
-                      ((1,0), "right"), ((1,1), "right"), ((1,2), "down"), ((1,3), "up"), ((1,5), "up"),
-                      ((2,0), "up"), ((2,2), "down"), ((2,4), "right"), ((2,5), "up"),
-                      ((3,0), "up"), ((3,1), "left"), ((3,2),"left"), ((3,3), "right"), ((3,4), "left"), ((3,5), "left")]
-    for state_action in initial_policy:
-        monte.Q_values[state_action] = 1
-    print("Before (random policy), T = Target, W = Wall")
-    monte.render()
-    print("\n\nRunning the episodes...\n\n")
-    monte.demo()
-    print("After running the episodes, T = Target, W = Wall")
-    monte.render()
+    # print("************************Slides example***********************")
+    # monte = Monte_Carlo()
+    # initial_policy = [((0,1),"left"), ((0,2), "left"), ((0,3), "left"), ((0,4), "right"), ((0,5), "left"),
+    #                   ((1,0), "right"), ((1,1), "right"), ((1,2), "down"), ((1,3), "up"), ((1,5), "up"),
+    #                   ((2,0), "up"), ((2,2), "down"), ((2,4), "right"), ((2,5), "up"),
+    #                   ((3,0), "up"), ((3,1), "left"), ((3,2),"left"), ((3,3), "right"), ((3,4), "left"), ((3,5), "left")]
+    # for state_action in initial_policy:
+    #     monte.Q_values[state_action] = 1
+    # print("Before (random policy), T = Target, W = Wall")
+    # monte.render()
+    # print("\n\nRunning the episodes...\n\n")
+    # monte.demo()
+    # print("After running the episodes, T = Target, W = Wall")
+    # monte.render()
     
     # print("Q_value",monte.print_Qvalue((3,1)))
 
