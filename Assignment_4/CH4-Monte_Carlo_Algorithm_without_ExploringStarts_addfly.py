@@ -48,9 +48,9 @@ class Environment():
 class Monte_Carlo():
     def __init__(self):
         self.env = Environment()
-        self.Max_iteration = 10000
+        self.Max_iteration = 20000
         self.gamma = 0.9
-        self.Horizon = 15 #Max episode_length
+        self.Horizon = 3 #Max episode_length
         self.epsilon = 0.1
 
         self.Q_values = {}
