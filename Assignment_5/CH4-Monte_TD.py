@@ -3,7 +3,6 @@
 # Q-value: for simplicity zero
 # Initial Q values are all zero
 
-from operator import index
 from matplotlib.pyplot import grid
 import numpy as np
 import random
@@ -40,7 +39,7 @@ class Monte_Carlo():
         self.env = Environment()
         self.Max_iteration = 100
         self.gamma = 0.7
-        self.Horizon = 5 #Max episode_length
+        self.alpha = 0.2
 
         self.Q_values = {}
         for row in range(self.env.rows):
@@ -99,35 +98,32 @@ class Monte_Carlo():
 
     def iter(self): #Main loop 主要程式碼
         for iterration in range(self.Max_iteration):
-            # 初始參數
-            episode = []
             # 隨機決定位置
             self.current_state_coordinates = self.generate_initial_state()
             # 隨機決定動作
             action = self.generate_random_action()
-
-            for h in range(self.Horizon): #Generate episode
+            done,G = False,0
+            while True:
                 next_state_coordinates = self.env.transfer_state(self.current_state_coordinates, action)
                 reward = -1
                 if self.env.grid_world[next_state_coordinates[0]][next_state_coordinates[1]] == "T":
                     reward = 100
-                    episode.append([self.current_state_coordinates, action, reward])
-                    break
-                episode.append([self.current_state_coordinates, action, reward]) #Episode [[[coordinate],action, reward]]
-                self.current_state_coordinates = next_state_coordinates
-                action = self.policy(self.current_state_coordinates)
-            G = 0
-            
-            for h in range(len(episode)-1, -1, -1): #Iterate through H-1, H-2,...,0
-                coordinate, action, reward = episode[h]
-                G = self.gamma*G + reward
-                returns = self.returns_dict[(tuple(coordinate), action)]
-                mean = returns[0]
+                    done = True
+                returns = self.returns_dict[(tuple(self.current_state_coordinates), action)]
+                if done:
+                    G = returns[0] + self.alpha * (reward - returns[0])    
+                else:
+                    next_action = self.policy(next_state_coordinates)
+                    next_returns = self.returns_dict[(tuple(next_state_coordinates), next_action)]
+                    G = returns[0] + self.alpha * (reward + self.gamma * next_returns[0] - returns[0])
                 visited_count = returns[1]
-                mean = (mean*visited_count + G)/(visited_count + 1)
                 visited_count += 1
-                self.returns_dict[(tuple(episode[h][0] ), episode[h][1])] = [mean, visited_count]
-                self.Q_values[(tuple(episode[h][0]), episode[h][1])] = self.returns_dict[(tuple(episode[h][0]), episode[h][1])][0]
+                self.returns_dict[(tuple(self.current_state_coordinates ), action)] = [G, visited_count]
+                self.Q_values[(tuple(self.current_state_coordinates), action)] = self.returns_dict[(tuple(self.current_state_coordinates), action)][0]
+                if done:
+                    break
+                self.current_state_coordinates = next_state_coordinates
+                action = next_action
 
     def render(self): #Show results
         output = self.env.grid_world
@@ -147,42 +143,6 @@ class Monte_Carlo():
             print(out)
         print("-------------------------------------------------------")
 
-    def demo(self): #Slides example
-        self.Horizon = 6
-        initial_state_actions = [[[1,1], "left"], [[1,2], "right"], [[2,2], "up"], [[1,1], "up"]]
-        for state_action in initial_state_actions:
-            episode = []
-            self.current_state_coordinates = np.array(state_action[0])
-            action = state_action[1]
-            for h in range(self.Horizon): #Generate episode
-                next_state_coordinates = self.env.transfer_state(self.current_state_coordinates, action)
-                reward = -1
-                if self.env.grid_world[next_state_coordinates[0]][next_state_coordinates[1]] == "T":
-                    reward = 100
-                    episode.append([self.current_state_coordinates, action, reward])
-                    break
-                episode.append([self.current_state_coordinates, action, reward]) #Episode [[[coordinate],action, reward]]
-                self.current_state_coordinates = next_state_coordinates
-                action = self.policy(self.current_state_coordinates)
-            G = 0
-            print("episode sequence:", episode)
-            for h in range(len(episode)-1, -1, -1): #Iterate H-1, H-1,...,0
-                coordinate, action, reward = episode[h]
-                G = self.gamma*G + reward
-                returns = self.returns_dict[(tuple(coordinate), action)]
-                mean = returns[0]
-                visited_count = returns[1]
-                mean = (mean*visited_count + G)/(visited_count + 1)
-                visited_count += 1
-                self.returns_dict[(tuple(episode[h][0] ), episode[h][1])] = [mean, visited_count]
-                self.Q_values[(tuple(episode[h][0]), episode[h][1])] = self.returns_dict[(tuple(episode[h][0]), episode[h][1])][0]
-
-            print("Returns:")
-            for h in range(len(episode)-1, -1, -1):
-                coordinate, action, reward = episode[h]
-                print("Coordinate:", coordinate,"\tAction:", action, "\tReturn:", self.returns_dict[(tuple(coordinate), action)])
-            print("")
-
 if __name__ == "__main__":
     print("Find optimal policy using Monte Carlo algorithm with exploring starts")
     monte = Monte_Carlo()
@@ -191,27 +151,6 @@ if __name__ == "__main__":
     monte.iter()
     print("\nOptimal policy, T = Target, W = Wall")
     monte.render()
-
-    # print("************************Slides example***********************")
-    # monte = Monte_Carlo()
-    # initial_policy = [((0,1),"left"), ((0,2), "left"), ((0,3), "left"), ((0,4), "right"), ((0,5), "left"),
-    #                   ((1,0), "right"), ((1,1), "right"), ((1,2), "down"), ((1,3), "up"), ((1,5), "up"),
-    #                   ((2,0), "up"), ((2,2), "down"), ((2,4), "right"), ((2,5), "up"),
-    #                   ((3,0), "up"), ((3,1), "left"), ((3,2),"left"), ((3,3), "right"), ((3,4), "left"), ((3,5), "left")]
-    # for state_action in initial_policy:
-    #     monte.Q_values[state_action] = 1
-    # print("Before (random policy), T = Target, W = Wall")
-    # monte.render()
-    # print("\n\nRunning the episodes...\n\n")
-    # monte.demo()
-    # print("After running the episodes, T = Target, W = Wall")
-    # monte.render()
-    
-    # print("Q_value",monte.print_Qvalue((3,1)))
-
-        
-    
-
 
 
 
