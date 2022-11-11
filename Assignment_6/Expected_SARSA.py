@@ -1,4 +1,4 @@
-# Slide Example for Q-LEarning (RL-Course NTNU, Saeedvand)
+# Slide Example for ESARSA (RL-Course NTNU, Saeedvand)
 
 import gym
 import numpy as np
@@ -6,11 +6,13 @@ import time
 import math
 import matplotlib.pyplot as plt
 
-env = gym.make('Taxi-v3')#, render_mode="human")
+env = gym.make('CliffWalking-v0')#\, render_mode="human")
+# gym.make("Taxi-v3")
+# gym.make('CliffWalking-v0')
 
 def plot(rewards):
     plt.figure(2)
-    plt.title('Aveage Reward Q-Learning')
+    plt.title('Aveage Reward ESARSA')
     plt.xlabel('Episode')
     plt.ylabel('Average Reward')
     plt.plot(rewards, color='green', label='Reward)')
@@ -42,7 +44,7 @@ def normalize(list):
         list[i] = (x-xmin) / (xmax-xmin)
     return list 
 
-def Qlearning(alpha, gamma, epsilon, episodes, max_steps, EPS_START, EPS_END, EPS_DECAY, n_tests):
+def Expected_SARSA(alpha, gamma, epsilon, episodes, max_steps, EPS_START, EPS_END, EPS_DECAY, n_tests):
     n_states, n_actions = env.observation_space.n, env.action_space.n
     Q = Q_value_initialize(n_states, n_actions, type = 0)
     timestep_reward = []
@@ -50,9 +52,6 @@ def Qlearning(alpha, gamma, epsilon, episodes, max_steps, EPS_START, EPS_END, EP
         print(f"Episode: {episode}")
         s, info = env.reset() # read also state
 
-        EPS_START = 0.001
-        EPS_END = 1
-        EPS_DECAY = 10 
         epsilon_threshold = EPS_END + (EPS_START - EPS_END) * math.exp(-1. * episode / EPS_DECAY)
 
         t = 0
@@ -69,13 +68,19 @@ def Qlearning(alpha, gamma, epsilon, episodes, max_steps, EPS_START, EPS_END, EP
 
             #s_, reward, done, info = env.step(a)
             total_reward += reward
-            a_next = np.argmax(Q[s_, :]).item()
+            
+            ################ESARSA difference################
+            # no need for next action
 
             if terminated or truncated:
                 Q[s, a] += alpha * (reward - Q[s, a])
             else:
-                Q[s, a] += alpha * (reward + (gamma * Q[s_, a_next]) - Q[s, a])
-            s, a = s_, a_next
+                ################ESARSA difference################
+                expected_value = np.mean(Q[s_, :])
+
+                Q[s, a] += alpha * (reward + (gamma * expected_value) - Q[s, a])
+            
+            s = s_
             
             if terminated or truncated:
                 s, info = env.reset()
@@ -89,23 +94,26 @@ def Qlearning(alpha, gamma, epsilon, episodes, max_steps, EPS_START, EPS_END, EP
     if n_tests > 0:
         test_agent(Q, n_tests)
     
+    # plot(timestep_reward)
     plot(normalize(timestep_reward))
     return timestep_reward
 
 #----------------------------------------------------
 def test_agent(Q, n_tests = 0, delay=1):
-    env = gym.make('Taxi-v3', render_mode="human")
+    env = gym.make('CliffWalking-v0', render_mode="human")
     for testing in range(n_tests):
         print(f"Test #{testing}")
         s, info = env.reset()
+        steps = 0
         while True:
+            steps += 1 # to stop the loop if algorithm has not been trained
             time.sleep(delay)
             a = np.argmax(Q[s, :]).item()
             print(f"Chose action {a} for state {s}")
             s, reward, terminated, truncated, info = env.step(a)
             #time.sleep(1)
 
-            if terminated or truncated:
+            if terminated or truncated or steps > 20:
                 print("Finished!", reward)
                 time.sleep(5)
                 break
@@ -122,6 +130,6 @@ if __name__ == "__main__":
 
     max_steps = 2500 # to make it infinite make sure reach objective
 
-    timestep_reward = Qlearning(
+    timestep_reward = Expected_SARSA(
         alpha, gamma, epsilon, episodes, max_steps, EPS_START, EPS_END, EPS_DECAY, n_tests = 2)
   

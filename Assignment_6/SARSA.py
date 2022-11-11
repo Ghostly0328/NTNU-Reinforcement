@@ -1,4 +1,4 @@
-# Slide Example for ESARSA (RL-Course NTNU, Saeedvand)
+# Slide Example for SARSA (RL-Course NTNU, Saeedvand)
 
 import gym
 import numpy as np
@@ -6,11 +6,11 @@ import time
 import math
 import matplotlib.pyplot as plt
 
-env = gym.make('Taxi-v3')#, render_mode="human")
+env = gym.make("Taxi-v3")#, render_mode="human")
 
 def plot(rewards):
     plt.figure(2)
-    plt.title('Aveage Reward ESARSA')
+    plt.title('Aveage Reward SARSA')
     plt.xlabel('Episode')
     plt.ylabel('Average Reward')
     plt.plot(rewards, color='green', label='Reward)')
@@ -26,7 +26,7 @@ def Q_value_initialize(state, action, type = 0):
     elif type == -1:
         return np.random.random((state, action))
    
-
+ 
 def epsilon_greedy(Q, epsilon, s):
     if np.random.rand() < epsilon:
         action = np.argmax(Q[s, :]).item()
@@ -42,7 +42,7 @@ def normalize(list):
         list[i] = (x-xmin) / (xmax-xmin)
     return list 
 
-def Expected_SARSA(alpha, gamma, epsilon, episodes, max_steps, EPS_START, EPS_END, EPS_DECAY, n_tests):
+def SARSA(alpha, gamma, epsilon, episodes, max_steps, EPS_START, EPS_END, EPS_DECAY, n_tests):
     n_states, n_actions = env.observation_space.n, env.action_space.n
     Q = Q_value_initialize(n_states, n_actions, type = 0)
     timestep_reward = []
@@ -67,18 +67,14 @@ def Expected_SARSA(alpha, gamma, epsilon, episodes, max_steps, EPS_START, EPS_EN
             #s_, reward, done, info = env.step(a)
             total_reward += reward
             
-            ################ESARSA difference################
-            # no need for next action
+            ################SARSA and Q-Learning difference################
+            a_next = epsilon_greedy(Q, epsilon_threshold, s_) 
 
             if terminated or truncated:
                 Q[s, a] += alpha * (reward - Q[s, a])
             else:
-                ################ESARSA difference################
-                expected_value = np.mean(Q[s_, :])
-
-                Q[s, a] += alpha * (reward + (gamma * expected_value) - Q[s, a])
-            
-            s = s_
+                Q[s, a] += alpha * (reward + (gamma * Q[s_, a_next]) - Q[s, a])
+            s, a = s_, a_next
             
             if terminated or truncated:
                 s, info = env.reset()
@@ -92,7 +88,6 @@ def Expected_SARSA(alpha, gamma, epsilon, episodes, max_steps, EPS_START, EPS_EN
     if n_tests > 0:
         test_agent(Q, n_tests)
     
-    plot(timestep_reward)
     plot(normalize(timestep_reward))
     return timestep_reward
 
@@ -102,16 +97,14 @@ def test_agent(Q, n_tests = 0, delay=1):
     for testing in range(n_tests):
         print(f"Test #{testing}")
         s, info = env.reset()
-        steps = 0
         while True:
-            steps += 1 # to stop the loop if algorithm has not been trained
             time.sleep(delay)
             a = np.argmax(Q[s, :]).item()
             print(f"Chose action {a} for state {s}")
             s, reward, terminated, truncated, info = env.step(a)
             #time.sleep(1)
 
-            if terminated or truncated or steps > 20:
+            if terminated or truncated:
                 print("Finished!", reward)
                 time.sleep(5)
                 break
@@ -128,6 +121,35 @@ if __name__ == "__main__":
 
     max_steps = 2500 # to make it infinite make sure reach objective
 
-    timestep_reward = Expected_SARSA(
+    timestep_reward = SARSA(
         alpha, gamma, epsilon, episodes, max_steps, EPS_START, EPS_END, EPS_DECAY, n_tests = 2)
   
+
+
+# class DN(nn.Module):
+#     def __init__(self, h, w, outputs):
+#         super(DQN, self).__init__()
+#         self.conv1 = nn.Conv2d(1, 16, kernel_size=5, stride=2, padding=0)
+#         self.bn1 = nn.BatchNorm2d(16)
+#         self.conv2 = nn.Conv2d(16, 32, kernel_size=5, stride=2, padding=0)
+#         self.bn2 = nn.BatchNorm2d(32)
+#         self.conv3 = nn.Conv2d(32, 32, kernel_size=5, stride=2, padding=0)
+#         self.bn3 = nn.BatchNorm2d(32)
+#         nn.MaxPool2d(2)
+
+#         def conv2d_size_out(size, kernel_size=5, stride=2):
+#             return (size - (kernel_size - 1) - 1) // stride + 1
+
+#         convw = conv2d_size_out(conv2d_size_out(conv2d_size_out(w)))
+#         convh = conv2d_size_out(conv2d_size_out(conv2d_size_out(h)))
+
+#         linear_input_size = convw * convh * 32
+#         self.head = nn.Linear(linear_input_size, linear_input_size)
+#         self.head = nn.Linear(linear_input_size, outputs)
+
+#     def forward(self, x):
+#         x = F.relu(self.bn1(self.conv1(x)))
+#         x = F.relu(self.bn2(self.conv2(x)))
+#         x = F.relu(self.bn3(self.conv3(x)))
+
+#         return self.head(x.view(x.size(0), -1))
