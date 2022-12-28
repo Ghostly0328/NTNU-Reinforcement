@@ -1,27 +1,25 @@
 # Keep a saft distance
- NTNU Reinforcement Class Resources and Keep a Saft distance(FinalProject)
+NTNU Reinforcement Class Resources and Keep a Saft distance(FinalProject)
 
 ### Result
 
-you can see the result video and PowerPoint at the bottom.  
-googledrive: https://drive.google.com/drive/folders/1O0bscrki1WSk_qIlONhCTjL-aP4DEWPL?usp=share_link  
+you can see the result video and PowerPoint at the [GoogleDrive](https://drive.google.com/drive/folders/1O0bscrki1WSk_qIlONhCTjL-aP4DEWPL?usp=share_link).  
+
 ### Requirements
 
-install Unity LTS 2021.3.14f1  
-unity.com: https://unity.com/releases/editor/qa/lts-releases  
-(basically greater than 2021.3.14f1 is also possible but not recommended)
+install Unity LTS [2021.3.14f1](https://unity.com/releases/editor/qa/lts-releases)  
+(install Unity > LTS 2021.3.14f1 not recommended)  
 
-install Python, Pytorch, CUDA, and Unity ML-agent   
-tutorial: https://youtu.be/zPFU30tbyKs?t=82  
-from 1:22 ~ 10:10
+install Python, Pytorch, CUDA, and Unity ML-agent from [here](https://youtu.be/zPFU30tbyKs?t=82)   
+
+### Run
 
 ```
 git clone https://github.com/Ghostly0328/NTNU-Reinforcement    
 cd FinalProject
 ```
 
-open RL_FinalProject folder from Unity  
-click the play button and enjoy
+Open RL_FinalProject folder from Unity, click the play button and enjoy.
 
 ### What I did?
 
@@ -34,11 +32,13 @@ the whole project  is to take photos to get the current situation in front of me
 ppo will only know the vehicle coordinates from yolo value (according to the image to get the coordinates are not the world coordinates), and then according to the coordinates to calculate whether to accelerate or decelerate.  
 
 #### PPO
+
 **observation**: current speed, car position(The position is based on the x and y of the YOLO output)  
 **actions**: speed up, slow down(1 to -1, Continuous)  
 **Reward**: in the yellow box(+0.005), not in the yellow box(-0.001), car accident(-1)
 
 ### Tips
+
 <img src="./figure/carposition.png" height="150">    
 
 The position of the vehicle I set on the picture of the red dot.   
