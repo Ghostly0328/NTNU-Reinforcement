@@ -33,14 +33,21 @@ ppo will only know the vehicle coordinates from yolo value (according to the ima
 
 #### PPO
 
-**observation**: current speed, car position(The position is based on the x and y of the YOLO output)  
-**actions**: speed up, slow down(1 to -1, Continuous)  
-**Reward**: in the yellow box(+0.005), not in the yellow box(-0.001), car accident(-1)
+- **Observation**: 
+  - Current speed
+  - Car position (The position is based on the x and y of the YOLO output)  
+- **Actions(Continuous)**:  
+  - Speed up (1 to 0)  
+  - Slow down (0 to -1)  
+- **Reward**:
+  - +0.005 if in the yellow box
+  - -0.001 if not in the yellow box
+  - -1 at car accident
 
 ### Tips
 
 <img src="./figure/carposition.png" height="150">    
 
-The position of the vehicle I set on the picture of the red dot.   
-According to this [paper](https://hdl.handle.net/11296/nurgsx), you can use the distance between the base of the vehicle and the bottom of the picture to calculate the actual distance length.  
-I have tried to give other things such as the area of the bound box but the effect is not good, when the vehicle is too far away will not be distinguished. The use of the car base marker not only improves the effect, but can also have the same effect if the vehicles are different in size or type.  
+- The position of the vehicle I set on the picture of the red dot.   
+- According to this [paper](https://hdl.handle.net/11296/nurgsx), you can use the distance between the base of the vehicle and the bottom of the picture to calculate the actual distance length.  
+- I have tried to give other things such as the area of the bound box but the effect is not good, when the vehicle is too far away will not be distinguished. The use of the car base marker not only improves the effect, but can also have the same effect if the vehicles are different in size or type.  
