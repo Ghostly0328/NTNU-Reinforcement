@@ -1,0 +1,47 @@
+{
+    "name": "root",
+    "metadata": {
+        "timer_format_version": "0.1.0",
+        "start_time_seconds": "1671806815",
+        "python_version": "3.9.12 (main, Apr  4 2022, 05:22:27) [MSC v.1916 64 bit (AMD64)]",
+        "command_line_arguments": "C:\\Users\\D0650135\\Anaconda3\\Scripts\\mlagents-learn .\\config\\SaftDistance.yaml --run-id=SaftDistance-Test13",
+        "mlagents_version": "0.30.0",
+        "mlagents_envs_version": "0.30.0",
+        "communication_protocol_version": "1.5.0",
+        "pytorch_version": "1.11.0",
+        "numpy_version": "1.21.2",
+        "end_time_seconds": "1671806825"
+    },
+    "total": 10.1912041,
+    "count": 1,
+    "self": 0.006692499999999768,
+    "children": {
+        "run_training.setup": {
+            "total": 0.21896260000000023,
+            "count": 1,
+            "self": 0.21896260000000023
+        },
+        "TrainerController.start_learning": {
+            "total": 9.965549,
+            "count": 1,
+            "self": 0.0005899000000013643,
+            "children": {
+                "TrainerController._reset_env": {
+                    "total": 9.964948099999999,
+                    "count": 1,
+                    "self": 9.964948099999999
+                },
+                "trainer_threads": {
+                    "total": 7.999999986907369e-07,
+                    "count": 1,
+                    "self": 7.999999986907369e-07
+                },
+                "TrainerController._save_models": {
+                    "total": 1.0200000000182285e-05,
+                    "count": 1,
+                    "self": 1.0200000000182285e-05
+                }
+            }
+        }
+    }
+}

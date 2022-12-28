@@ -1,0 +1,29 @@
+{
+    "SaftDistance": {
+        "checkpoints": [
+            {
+                "steps": 10760,
+                "file_path": "results\\SaftDistance-Test18\\SaftDistance\\SaftDistance-10760.onnx",
+                "reward": -0.41750001907348633,
+                "creation_time": 1672204638.9452698,
+                "auxillary_file_paths": [
+                    "results\\SaftDistance-Test18\\SaftDistance\\SaftDistance-10760.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 10760,
+            "file_path": "results\\SaftDistance-Test18\\SaftDistance.onnx",
+            "reward": -0.41750001907348633,
+            "creation_time": 1672204638.9452698,
+            "auxillary_file_paths": [
+                "results\\SaftDistance-Test18\\SaftDistance\\SaftDistance-10760.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "1.11.0"
+    }
+}

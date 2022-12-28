@@ -1,0 +1,65 @@
+{
+    "SaftDistance": {
+        "checkpoints": [
+            {
+                "steps": 3499985,
+                "file_path": "results\\SaftDistance-Test15\\SaftDistance\\SaftDistance-3499985.onnx",
+                "reward": null,
+                "creation_time": 1671818541.9589715,
+                "auxillary_file_paths": [
+                    "results\\SaftDistance-Test15\\SaftDistance\\SaftDistance-3499985.pt"
+                ]
+            },
+            {
+                "steps": 3999994,
+                "file_path": "results\\SaftDistance-Test15\\SaftDistance\\SaftDistance-3999994.onnx",
+                "reward": 0.1249999925494194,
+                "creation_time": 1671819066.7868495,
+                "auxillary_file_paths": [
+                    "results\\SaftDistance-Test15\\SaftDistance\\SaftDistance-3999994.pt"
+                ]
+            },
+            {
+                "steps": 4499999,
+                "file_path": "results\\SaftDistance-Test15\\SaftDistance\\SaftDistance-4499999.onnx",
+                "reward": 0.2349999751895666,
+                "creation_time": 1671819591.6962702,
+                "auxillary_file_paths": [
+                    "results\\SaftDistance-Test15\\SaftDistance\\SaftDistance-4499999.pt"
+                ]
+            },
+            {
+                "steps": 4999968,
+                "file_path": "results\\SaftDistance-Test15\\SaftDistance\\SaftDistance-4999968.onnx",
+                "reward": -0.5166666774700085,
+                "creation_time": 1671820115.2300742,
+                "auxillary_file_paths": [
+                    "results\\SaftDistance-Test15\\SaftDistance\\SaftDistance-4999968.pt"
+                ]
+            },
+            {
+                "steps": 5000032,
+                "file_path": "results\\SaftDistance-Test15\\SaftDistance\\SaftDistance-5000032.onnx",
+                "reward": -0.5166666774700085,
+                "creation_time": 1671820115.3040643,
+                "auxillary_file_paths": [
+                    "results\\SaftDistance-Test15\\SaftDistance\\SaftDistance-5000032.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 5000032,
+            "file_path": "results\\SaftDistance-Test15\\SaftDistance.onnx",
+            "reward": -0.5166666774700085,
+            "creation_time": 1671820115.3040643,
+            "auxillary_file_paths": [
+                "results\\SaftDistance-Test15\\SaftDistance\\SaftDistance-5000032.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "1.11.0"
+    }
+}

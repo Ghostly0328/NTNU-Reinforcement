@@ -1,0 +1,47 @@
+{
+    "SaftDistance": {
+        "checkpoints": [
+            {
+                "steps": 499963,
+                "file_path": "results\\SaftDistance-Test19\\SaftDistance\\SaftDistance-499963.onnx",
+                "reward": 2.9959999203681944,
+                "creation_time": 1672205212.4151268,
+                "auxillary_file_paths": [
+                    "results\\SaftDistance-Test19\\SaftDistance\\SaftDistance-499963.pt"
+                ]
+            },
+            {
+                "steps": 999976,
+                "file_path": "results\\SaftDistance-Test19\\SaftDistance\\SaftDistance-999976.onnx",
+                "reward": null,
+                "creation_time": 1672205762.8794117,
+                "auxillary_file_paths": [
+                    "results\\SaftDistance-Test19\\SaftDistance\\SaftDistance-999976.pt"
+                ]
+            },
+            {
+                "steps": 1000040,
+                "file_path": "results\\SaftDistance-Test19\\SaftDistance\\SaftDistance-1000040.onnx",
+                "reward": null,
+                "creation_time": 1672205762.9544034,
+                "auxillary_file_paths": [
+                    "results\\SaftDistance-Test19\\SaftDistance\\SaftDistance-1000040.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 1000040,
+            "file_path": "results\\SaftDistance-Test19\\SaftDistance.onnx",
+            "reward": null,
+            "creation_time": 1672205762.9544034,
+            "auxillary_file_paths": [
+                "results\\SaftDistance-Test19\\SaftDistance\\SaftDistance-1000040.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "1.11.0"
+    }
+}

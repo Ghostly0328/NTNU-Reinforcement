@@ -1910,7 +1910,6 @@ GameObject:
   - component: {fileID: 3275555271430960658}
   - component: {fileID: 3266915600769906092}
   - component: {fileID: 3307476885151528040}
-  - component: {fileID: 4246680706187826136}
   m_Layer: 0
   m_Name: Bus
   m_TagString: Untagged
@@ -2010,18 +2009,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43895113535026548, guid: aa35f88e912d1564d9145d86948e20eb, type: 2}
---- !u!114 &4246680706187826136
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3244842882972376790}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 101097f89cb632146a20ae15caf5c6cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &5703890989630749299
 GameObject:
   m_ObjectHideFlags: 0
@@ -2034,7 +2021,6 @@ GameObject:
   - component: {fileID: 5718069459226514103}
   - component: {fileID: 5726854299244974345}
   - component: {fileID: 5749180818828136653}
-  - component: {fileID: 3313663876879952280}
   m_Layer: 0
   m_Name: Bus (1)
   m_TagString: Untagged
@@ -2134,18 +2120,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43895113535026548, guid: aa35f88e912d1564d9145d86948e20eb, type: 2}
---- !u!114 &3313663876879952280
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5703890989630749299}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 101097f89cb632146a20ae15caf5c6cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &5703958189003111623
 GameObject:
   m_ObjectHideFlags: 0
@@ -4670,7 +4644,6 @@ GameObject:
   - component: {fileID: 6653430710716138635}
   - component: {fileID: 6662738918380111669}
   - component: {fileID: 6685069612509316849}
-  - component: {fileID: 953019435682223628}
   m_Layer: 0
   m_Name: Bus (2)
   m_TagString: Untagged
@@ -4770,18 +4743,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43895113535026548, guid: aa35f88e912d1564d9145d86948e20eb, type: 2}
---- !u!114 &953019435682223628
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6640373723778001999}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 101097f89cb632146a20ae15caf5c6cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &6640440942386490107
 GameObject:
   m_ObjectHideFlags: 0
@@ -5294,7 +5255,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6648088195550575260}
   m_LocalRotation: {x: -0, y: -0.00016723572, z: -0, w: 1}
-  m_LocalPosition: {x: 32.9, y: 0.45999908, z: 8.02}
+  m_LocalPosition: {x: 32.9, y: 0.45999908, z: 10.7}
   m_LocalScale: {x: 255.8012, y: 1, z: 1.6005}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5404,7 +5365,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6648088195835086321}
   m_LocalRotation: {x: -0, y: -0.00016723572, z: -0, w: 1}
-  m_LocalPosition: {x: 32.9, y: 0.45999908, z: -8.21}
+  m_LocalPosition: {x: 32.9, y: 0.45999908, z: -10.9}
   m_LocalScale: {x: 255.8012, y: 1, z: 1.6005}
   m_ConstrainProportionsScale: 0
   m_Children: []

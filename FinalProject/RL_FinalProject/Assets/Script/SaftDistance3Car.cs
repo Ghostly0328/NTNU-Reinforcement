@@ -11,6 +11,8 @@ public class SaftDistance3Car : Agent
 
     [SerializeField] private List<Vector3> BusiniPosition = new List<Vector3>();
     [SerializeField] private List<Transform> BusTransList;
+    
+    [SerializeField] private GameObject BusPrefab;
 
     [SerializeField] private Transform Goal;
     [SerializeField] private float distance;
@@ -29,6 +31,8 @@ public class SaftDistance3Car : Agent
     [SerializeField] private Material loseMaterial;
     [SerializeField] private MeshRenderer floorMeshRenderer;
 
+    [SerializeField] private List<GameObject> exsistCar = new List<GameObject>();
+
 
     private void Start()
     {
@@ -46,10 +50,37 @@ public class SaftDistance3Car : Agent
         // Set transform
         transform.localPosition = new Vector3(Random.Range(-85, -10), 0, 0); // -85, -10
 
+        for (int n = 0; n < exsistCar.Count; n++)
+        {
+            Destroy(exsistCar[n]);
+        }
+
+        YOLOdetectList.Clear();
+        exsistCar.Clear();
+
         for (int n = 0; n < BusTransList.Count; n++)
         {
             BusTransList[n].localPosition = new Vector3(Random.Range(10, 80), BusTransList[n].localPosition.y, BusiniPosition[n].z + Random.Range(-1f, 1f));
+
+            if (n >= 1)
+            {
+                if (Random.Range(0f, 1f) > 0.4) //有機率生成車子
+                {
+                    GameObject go = Instantiate(BusPrefab, BusTransList[n].position, Quaternion.identity, transform.parent);
+                    go.transform.Rotate(0, 90, 0);
+                    exsistCar.Add(go);
+
+                    YOLOdetectList.Add(go.transform.GetChild(0));
+                    YOLOdetectList.Add(go.transform.GetChild(1));
+                }
+            }
+            else
+            {
+                YOLOdetectList.Add(BusTransList[n].GetChild(0));
+                YOLOdetectList.Add(BusTransList[n].GetChild(1));
+            }
         }
+
         //BusTrans.localPosition = new Vector3(Random.Range(10, 80), 0, 0);
 
         distance = Function(currentSpeedPerSecond);
@@ -58,6 +89,8 @@ public class SaftDistance3Car : Agent
         isInGoal = false;
         goalCount = 0;
     }
+
+
     public override void CollectObservations(VectorSensor sensor)
     {
         //sensor.AddObservation(transform.position);
@@ -68,30 +101,35 @@ public class SaftDistance3Car : Agent
 
         List<Vector2> positionList = new List<Vector2>();
 
-        for (int n = 0; n < BusTransList.Count; n++)
+        for (int n = 0; n < YOLOdetectList.Count; n += 2)
         {
-            positionLD = vehicleCam.WorldToScreenPoint(YOLOdetectList[2 * n].position);
-            positionRU = vehicleCam.WorldToScreenPoint(YOLOdetectList[2 * n + 1].position);
+            positionLD = vehicleCam.WorldToScreenPoint(YOLOdetectList[n].position);
+            positionRU = vehicleCam.WorldToScreenPoint(YOLOdetectList[n + 1].position);
 
             positionList.Add(positionLD + (positionRU - positionLD) / 2);
         }
 
-        // Cal the Area and Dist
-        //Vector2 positionLD = vehicleCam.WorldToScreenPoint(YOLODetectLD.position);
-        //Vector2 positionRU = vehicleCam.WorldToScreenPoint(YOLODetectRU.position);
+        while(positionList.Count < 3)
+        {
+            positionList.Add(Vector2.zero);
+        }
 
-        //positionLD = positionLD / new Vector2(vehicleCam.pixelWidth, vehicleCam.pixelHeight);
-        //positionRU = positionRU / new Vector2(vehicleCam.pixelWidth, vehicleCam.pixelHeight);
+        //List<int> ObservationList = new List<int>();
 
-        //area = Mathf.Abs((positionRU.x - positionLD.x) * (positionRU.y - positionLD.y));
+        //for (int n = 0; n< positionList.Count; n++)
+        //{
+        //    ObservationList.Add(n);
+        //}
 
-        //float distance = GetDistance();
-        sensor.AddObservation(distance);
+        //ObservationList = RandomChoiceList(ObservationList);
 
         for (int n = 0; n < positionList.Count; n++)
         {
             sensor.AddObservation(positionList[n]);
         }
+        print("CurrentSpeed: " + currentSpeed + "CarPosition: " + positionList[0].ToString()+ positionList[1].ToString()+ positionList[2].ToString());
+        sensor.AddObservation(currentSpeed);
+
     }
 
     public override void OnActionReceived(ActionBuffers actions)
@@ -158,5 +196,24 @@ public class SaftDistance3Car : Agent
         {
             isInGoal = false;
         }
+    }
+
+    List<int> RandomChoiceList(List<int> input)
+    {
+        List<int> outputList = new List<int>();
+
+        for ( int n =0; n < input.Count; n++)
+        {
+            int choiceNumber = Random.Range(0, input.Count);
+
+            while (outputList.Contains(choiceNumber))
+            {
+                choiceNumber = Random.Range(0, input.Count);
+            }
+            outputList.Add(choiceNumber);
+        }
+
+        return outputList;
+
     }
 }

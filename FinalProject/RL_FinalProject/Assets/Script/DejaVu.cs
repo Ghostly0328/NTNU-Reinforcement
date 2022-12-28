@@ -44,6 +44,8 @@ public class DejaVu : Agent
 
         isInBad = false;
     }
+
+
     public override void CollectObservations(VectorSensor sensor)
     {
 
@@ -57,12 +59,19 @@ public class DejaVu : Agent
             positionLD = vehicleCam.WorldToScreenPoint(YOLOdetectList[2 * n].position);
             positionRU = vehicleCam.WorldToScreenPoint(YOLOdetectList[2 * n + 1].position);
 
-            positionList.Add(positionLD + (positionRU - positionLD) / 2);
-        }
+            Vector2 middlePoint = positionLD + (positionRU - positionLD) / 2;
+            bool isForward = vehicleCam.WorldToViewportPoint(YOLOdetectList[0].position).z > 0;
+            Vector2 outPutPoint;
 
-        for (int n = 0; n < positionList.Count; n++)
-        {
-            sensor.AddObservation(positionList[n]);
+            if (middlePoint.x >= 0 && middlePoint.x < 1920 && isForward)
+            {
+                outPutPoint = middlePoint;
+            }
+            else
+            {
+                outPutPoint = Vector2.zero;
+            }
+            sensor.AddObservation(outPutPoint);
         }
     }
 
@@ -76,14 +85,14 @@ public class DejaVu : Agent
 
         if (isInBad)
         {
-            AddReward( -0.05f);
+            AddReward(-0.001f);
         }
 
         if (isInCar)
         {
-            AddReward(-0.07f);
+            AddReward(-0.001f);
         }
-        AddReward(Vector3.Distance(transform.position, Goal.position) / 244 * -0.005f + 0.005f);
+        AddReward(Vector3.Distance(transform.position, Goal.position) / 244 * -0.01f);
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -98,7 +107,7 @@ public class DejaVu : Agent
     {
         if (other.TryGetComponent<Wall>(out Wall wall))
         {
-            SetReward(-1f);
+            SetReward(-100f);
             floorMeshRenderer.material = loseMaterial;
             EndEpisode();
         }
