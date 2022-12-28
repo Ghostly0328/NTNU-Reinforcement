@@ -1,5 +1,5 @@
 # Keep a saft distance
-NTNU Reinforcement Class Resources and Keep a Saft distance(FinalProject)
+Keep a safe distance from vehicles in front of you by using images.
 
 ### Result
 
